@@ -24,7 +24,20 @@ switch ($op) {
     print json_encode($estado);
   }break;
   case 2:{
-
+    $html = file_get_html('https://www.indeci.gob.pe/emergencias.php?itemT=MA==');
+    $tr = $html->find('div[@class=caja]');
+    foreach ($tr as $item) {
+      $tremor = [];
+      $h4 = $item->find("h4")->plaintext;
+      $tremor['h4'] = $h4;
+      $a = $item->find("p",0)->plaintext;
+      $img = $item->find("img",0)->src;
+      $tremor['image'] = $img;
+      $tremor['place'] = $a;
+      $tremors[] = $tremor;
+    }
+    $estado['data'] = $tremors;
+    print json_encode($estado);
   }break;
 }
 ?>
